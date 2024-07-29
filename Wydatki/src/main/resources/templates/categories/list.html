@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Categories - Expense Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('/zdjecie.jpg') no-repeat center center fixed;
+            background-size: cover;
+            z-index: -1;
+        }
+        .background::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            filter: blur(8px);
+            z-index: -1;
+        }
+        .container {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 800px;
+            margin: 50px auto 0 auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .alert {
+            margin-bottom: 20px;
+        }
+        .content {
+            display: flex;
+            justify-content: space-between;
+        }
+        .categories-list {
+            width: 48%;
+        }
+        .add-category {
+            width: 48%;
+        }
+        .category-item {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        .category-item input {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+        .btn-update, .btn-delete {
+            width: 80px;
+        }
+    </style>
+</head>
+<body>
+<div class="background"></div>
+<div class="container">
+    <div class="header">
+        <h1>Manage Categories</h1>
+        <a href="/index" class="btn btn-secondary">Back to Home</a>
+    </div>
+
+    <div th:if="${message}" th:text="${message}" class="alert alert-success"></div>
+    <div th:if="${error}" th:text="${error}" class="alert alert-danger"></div>
+
+    <div class="content">
+        <div class="categories-list">
+            <h2>Your Categories</h2>
+            <div th:each="category : ${categories}" class="category-item">
+                <form th:action="@{/categories/update/{id}(id=${category.id})}" method="post" class="d-flex w-100">
+                    <input type="text" name="name" th:value="${category.name}" required class="form-control">
+                    <button type="submit" class="btn btn-primary btn-update">Update</button>
+                </form>
+                <form th:action="@{/categories/delete/{id}(id=${category.id})}" method="post">
+                    <button type="submit" class="btn btn-danger btn-delete">Delete</button>
+                </form>
+            </div>
+        </div>
+        <div class="add-category">
+            <h2>Add New Category</h2>
+            <form th:action="@{/categories}" method="post" th:object="${newCategory}">
+                <div class="mb-3">
+                    <input type="text" th:field="*{name}" class="form-control" required placeholder="Category Name">
+                </div>
+                <button type="submit" class="btn btn-primary">Add Category</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
